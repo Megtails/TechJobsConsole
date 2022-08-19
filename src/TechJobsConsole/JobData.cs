@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System;
 
 namespace TechJobsConsole
 {
@@ -37,6 +38,35 @@ namespace TechJobsConsole
             }
             return values;
         }
+        //Searches through every key value pair for a given search term.
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            //load data, if not already loaded
+            LoadData();
+
+            List<Dictionary<string, string>> values = new List<Dictionary<string, string>>();
+
+            //looks through each row
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                //looks through each column of that row
+                foreach (KeyValuePair<string, string> column in row)
+                {
+                    string lowerValue = value.ToLower();
+                    string lowerColumn = column.Value.ToLower();
+
+                    //checks to see if dictionary already contains value
+                    if (lowerColumn.Contains(lowerValue))
+                    {
+                        values.Add(row);
+                        break;
+                    }
+                }
+            }
+
+            return values;
+        }
+
 
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
@@ -48,8 +78,10 @@ namespace TechJobsConsole
             foreach (Dictionary<string, string> row in AllJobs)
             {
                 string aValue = row[column];
+                string lowerValue = value.ToLower();
+                string lowerAValue = aValue.ToLower();
 
-                if (aValue.Contains(value))
+                if (lowerAValue.Contains(lowerValue))
                 {
                     jobs.Add(row);
                 }
